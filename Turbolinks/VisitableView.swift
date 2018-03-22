@@ -16,7 +16,12 @@ open class VisitableView: UIView {
         installActivityIndicatorView()
     }
 
-
+    //MARK : Custom Loading
+    var customLoadingView :UIView?
+    
+    public func setCustomLoadingView(_ loadingView: UIView){
+        customLoadingView = loadingView
+    }
     // MARK: Web View
 
     open var webView: WKWebView?
@@ -102,14 +107,25 @@ open class VisitableView: UIView {
     }
 
     open func showActivityIndicator() {
+        
         if !isRefreshing {
-            activityIndicatorView.startAnimating()
-            bringSubview(toFront: activityIndicatorView)
+            if(self.customLoadingView != nil) {
+                addSubview(self.customLoadingView!)
+            }
+            else {
+                activityIndicatorView.startAnimating()
+                bringSubview(toFront: activityIndicatorView)
+            }
         }
     }
-
+    
     open func hideActivityIndicator() {
-        activityIndicatorView.stopAnimating()
+        if(self.customLoadingView != nil) {
+            self.customLoadingView!.removeFromSuperview()
+        }
+        else {
+            activityIndicatorView.stopAnimating()
+        }
     }
 
 
